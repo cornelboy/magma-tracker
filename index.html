@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Magma Tracker — gMON Balance & NFT Holdings</title>
+  <meta name="description" content="Track your Magma gMON balance, Scale NFTs, and Roarrr NFTs on the Monad blockchain." />
+  <meta name="theme-color" content="#02233C" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Animated background particles -->
+  <div id="bg-particles" class="bg-particles"></div>
+
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-group">
+        <div class="logo-composite">
+          <img src="/magma.png" alt="Magma Logo" class="magma-base-logo" onerror="this.src='/magma-logo.png'" />
+          <svg class="magma-glass" viewBox="0 0 24 24" fill="none" stroke="var(--magma-orange-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+        </div>
+        <h1 class="logo-text">MAGMA<span class="logo-accent">TRACKER</span></h1>
+      </div>
+      <p class="header-sub">Track your gMON balance & Magma NFT holdings</p>
+    </header>
+
+    <!-- Wallet Input -->
+    <section class="search-section">
+      <div class="search-box">
+        <div class="search-input-wrap">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input
+            type="text"
+            id="wallet-input"
+            class="search-input"
+            placeholder="Enter wallet address (0x...)"
+            spellcheck="false"
+            autocomplete="off"
+          />
+          <button id="clear-btn" class="clear-btn" title="Clear" style="display:none;">✕</button>
+        </div>
+        <button id="lookup-btn" class="lookup-icon-btn" title="Search Wallet">
+          <span class="btn-text" style="display:flex;">
+            <svg class="submit-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <span class="btn-loader" style="display:none;"></span>
+        </button>
+      </div>
+      <p id="error-msg" class="error-msg"></p>
+      <div id="recent-searches" class="recent-searches" style="display:none;"></div>
+      <div id="watchlist" class="recent-searches" style="display:none; margin-top: 8px;"></div>
+    </section>
+
+    <!-- Market Data Section (Global) -->
+    <section class="market-section" id="global-market-section">
+      <div class="market-header">
+        <h2 class="nft-title">MARKET OVERVIEW</h2>
+        <span id="live-mon-price" class="market-price-badge">1 MON = 1 gMON = $---</span>
+      </div>
+      <div class="market-chart-container">
+        <canvas id="mon-chart" height="70"></canvas>
+      </div>
+    </section>
+
+    <!-- Dashboard (hidden until lookup) -->
+    <main id="dashboard" class="dashboard" style="display:none;">
+
+      <!-- Wallet Address Display -->
+      <div class="wallet-address-bar">
+        <span class="wallet-label">Wallet</span>
+        <code id="wallet-display" class="wallet-addr"></code>
+        
+        <div class="sync-container" data-tooltip="Live Sync automatically refreshes balances every 30s.">
+          <label class="sync-toggle">
+            <input type="checkbox" id="sync-checkbox">
+            <span class="sync-slider"></span>
+          </label>
+          <span class="sync-label" id="sync-status">Sync Off</span>
+        </div>
+        
+        <div class="watchlist-container" id="watchlist-container" data-tooltip="Click the ⭐ to save to your Watchlist.">
+          <button id="star-btn" class="copy-btn star-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="star-icon" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"></polygon>
+            </svg>
+          </button>
+        </div>
+
+        <div class="watchlist-container" data-tooltip="Copy exact wallet address">
+          <button id="copy-btn" class="copy-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Balance Cards -->
+      <section class="balance-cards">
+        <div class="balance-card gmon-card">
+          <div class="card-header">
+            <div class="card-icon gmon-icon">
+              <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
+                <defs>
+                  <mask id="gmon-hole">
+                    <rect width="32" height="32" fill="white"/>
+                    <circle cx="16" cy="16" r="3" fill="black"/>
+                  </mask>
+                </defs>
+                <circle cx="16" cy="16" r="13" fill="none" stroke="#F27612" stroke-width="1.5"/>
+                <rect x="10" y="10" width="12" height="12" rx="3" fill="#F27612" transform="rotate(45 16 16)" mask="url(#gmon-hole)"/>
+              </svg>
+            </div>
+            <span class="card-label">gMON Balance</span>
+          </div>
+          <div id="gmon-balance" class="card-value skeleton-text">—</div>
+          <div id="gmon-usd" class="card-sub"></div>
+        </div>
+
+        <div class="balance-card mon-card">
+          <div class="card-header">
+            <div class="card-icon mon-icon">
+              <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
+                <circle cx="16" cy="16" r="14" fill="#836EF9"/>
+                <rect x="10.5" y="10.5" width="11" height="11" rx="3" fill="none" stroke="#FFFFFF" stroke-width="3" transform="rotate(45 16 16)"/>
+              </svg>
+            </div>
+            <span class="card-label">MON Balance</span>
+          </div>
+          <div id="mon-balance" class="card-value skeleton-text">—</div>
+          <div id="mon-usd" class="card-sub"></div>
+        </div>
+
+        <div class="balance-card nft-count-card">
+          <div class="card-header">
+            <span class="card-label">TOTAL NFTs</span>
+          </div>
+          <div id="total-nfts" class="card-value skeleton-text">—</div>
+          <div class="card-sub">Scale + Roarrr</div>
+        </div>
+      </section>
+
+      <!-- Scale NFTs -->
+      <section class="nft-section">
+        <div class="nft-section-header">
+          <h2 class="nft-title">SCALE</h2>
+          <span id="scale-count" class="nft-count-badge">0</span>
+        </div>
+        <div id="scale-grid" class="nft-grid">
+          <div class="nft-empty" id="scale-empty" style="display:none;">
+            <p>No Scale NFTs found for this wallet</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Roarrr NFTs -->
+      <section class="nft-section">
+        <div class="nft-section-header">
+          <h2 class="nft-title">ROARRR</h2>
+          <span id="roarrr-count" class="nft-count-badge">0</span>
+        </div>
+        <div id="roarrr-grid" class="nft-grid">
+          <div class="nft-empty" id="roarrr-empty" style="display:none;">
+            <p>No Roarrr NFTs found for this wallet</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Activity Feed (Moved to bottom) -->
+    <section id="global-activity" class="global-activity-section">
+      <div class="global-activity-header">
+        <h2 class="nft-title" style="font-size: 1rem; color: var(--magma-orange-light); margin: 0;">LIVE ECOSYSTEM ACTIVITY</h2>
+        <span class="pulse-indicator"></span>
+      </div>
+      <div class="global-activity-list" id="global-activity-list">
+        <div class="activity-loading">Scanning recent blocks for activity...</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <button id="export-btn" class="export-footer-btn" style="display:none;" title="Export data to CSV">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="export-icon" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Export Dashboard data to CSV
+      </button>
+      <p>Built for the Magma Community 🔥 Powered by <a href="https://monad.xyz" target="_blank" rel="noopener">Monad</a></p>
+    </footer>
+  </div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
