@@ -32,7 +32,9 @@
 }
 
 /* --- Reset & Base --- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -97,30 +99,24 @@ body {
 
 .logo-composite {
   position: relative;
-  width: 46px;
-  height: 46px;
+  width: 52px;
+  height: 52px;
   animation: pulse-glow 3s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.magma-base-logo {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: contain;
-  z-index: 1;
-}
-
-.magma-glass {
-  position: absolute;
-  top: 0;
-  left: 0;
+.pure-magma-logo {
   width: 100%;
   height: 100%;
-  z-index: 2;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 2px 8px rgba(242, 118, 18, 0.4));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.logo-composite:hover .pure-magma-logo {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 14px rgba(242, 118, 18, 0.6));
 }
 
 .logo-text {
@@ -192,8 +188,8 @@ body {
   box-shadow: 0 0 0 3px rgba(242, 118, 18, 0.15);
 }
 
-.search-input:focus ~ .search-icon,
-.search-input:focus + .search-icon {
+.search-input:focus~.search-icon,
+.search-input:focus+.search-icon {
   color: var(--magma-orange);
 }
 
@@ -389,7 +385,10 @@ body {
 .sync-slider {
   position: absolute;
   cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: var(--navy-lighter);
   transition: .4s;
   border-radius: 20px;
@@ -407,11 +406,11 @@ body {
   border-radius: 50%;
 }
 
-input:checked + .sync-slider {
+input:checked+.sync-slider {
   background-color: var(--magma-orange-glow);
 }
 
-input:checked + .sync-slider:before {
+input:checked+.sync-slider:before {
   background-color: var(--magma-orange);
   transform: translateX(16px);
 }
@@ -424,7 +423,8 @@ input:checked + .sync-slider:before {
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-input:checked ~ .sync-label {
+
+input:checked~.sync-label {
   color: var(--magma-orange);
 }
 
@@ -446,9 +446,17 @@ input:checked ~ .sync-label {
   animation: fadeInUp 0.6s ease-out both;
 }
 
-.balance-card:nth-child(1) { animation-delay: 0.1s; }
-.balance-card:nth-child(2) { animation-delay: 0.2s; }
-.balance-card:nth-child(3) { animation-delay: 0.3s; }
+.balance-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.balance-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.balance-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 .balance-card:hover {
   transform: translateY(-4px);
@@ -793,7 +801,7 @@ input:checked ~ .sync-label {
   transition: opacity 0.2s ease, visibility 0.2s ease;
   z-index: 100;
   pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 [data-tooltip]:hover::after {
@@ -802,7 +810,8 @@ input:checked ~ .sync-label {
 }
 
 /* --- Containers for Layout --- */
-.sync-container, .watchlist-container {
+.sync-container,
+.watchlist-container {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -924,6 +933,7 @@ input:checked ~ .sync-label {
 .global-activity-list::-webkit-scrollbar {
   width: 6px;
 }
+
 .global-activity-list::-webkit-scrollbar-thumb {
   background-color: var(--magma-orange);
   border-radius: 10px;
@@ -993,7 +1003,8 @@ input:checked ~ .sync-label {
   flex-wrap: wrap;
 }
 
-.activity-addr, .activity-amount {
+.activity-addr,
+.activity-amount {
   color: var(--text-primary);
   font-family: var(--font-body);
   font-weight: 500;
@@ -1022,6 +1033,7 @@ input:checked ~ .sync-label {
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1033,6 +1045,7 @@ input:checked ~ .sync-label {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1040,9 +1053,12 @@ input:checked ~ .sync-label {
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: drop-shadow(0 0 6px rgba(242, 118, 18, 0.3));
   }
+
   50% {
     filter: drop-shadow(0 0 16px rgba(242, 118, 18, 0.6));
   }
@@ -1068,14 +1084,6 @@ input:checked ~ .sync-label {
 
   .logo-text {
     font-size: 1.5rem;
-  }
-
-  .search-box {
-    flex-direction: column;
-  }
-
-  .lookup-btn {
-    width: 100%;
   }
 
   .balance-cards {
