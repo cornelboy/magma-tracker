@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Magma Tracker — gMON Balance & NFT Holdings</title>
+  <title>Magma Tracker - gMON Exposure, Redeems, and NFT Holdings</title>
   <meta name="description"
-    content="Track your Magma gMON balance, Scale NFTs, and Roarrr NFTs on the Monad blockchain." />
+    content="Track wallet gMON, redeem state, lending exposure, and Magma NFTs on Monad." />
   <meta name="theme-color" content="#02233C" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,11 +17,9 @@
 </head>
 
 <body>
-  <!-- Animated background particles -->
   <div id="bg-particles" class="bg-particles"></div>
 
   <div class="app">
-    <!-- Header -->
     <header class="header">
       <div class="logo-group">
         <div class="logo-composite">
@@ -33,22 +31,20 @@
                 <stop offset="100%" stop-color="#FF4500" />
               </linearGradient>
             </defs>
-            
-            <!-- Center Tracker Node -->
+
             <circle cx="50" cy="50" r="14" fill="url(#magma-grad)" />
             <circle cx="50" cy="50" r="5" fill="#02233C" />
-
-            <!-- Orbital Lens Arcs -->
-            <path d="M 12 50 Q 50 12, 88 50" stroke="url(#magma-grad)" stroke-width="8" stroke-linecap="round" fill="none" />
-            <path d="M 12 50 Q 50 88, 88 50" stroke="#133F65" stroke-width="8" stroke-linecap="round" fill="none" />
+            <path d="M 12 50 Q 50 12, 88 50" stroke="url(#magma-grad)" stroke-width="8" stroke-linecap="round"
+              fill="none" />
+            <path d="M 12 50 Q 50 88, 88 50" stroke="#133F65" stroke-width="8" stroke-linecap="round"
+              fill="none" />
           </svg>
         </div>
         <h1 class="logo-text">MAGMA<span class="logo-accent">TRACKER</span></h1>
       </div>
-      <p class="header-sub">Track your gMON balance & Magma NFT holdings</p>
+      <p class="header-sub">Track wallet gMON, redeem state, lending exposure, and Magma NFTs</p>
     </header>
 
-    <!-- Wallet Input -->
     <section class="search-section">
       <div class="search-box">
         <div class="search-input-wrap">
@@ -59,7 +55,7 @@
           </svg>
           <input type="text" id="wallet-input" class="search-input" placeholder="Enter wallet address (0x...)"
             spellcheck="false" autocomplete="off" />
-          <button id="clear-btn" class="clear-btn" title="Clear" style="display:none;">✕</button>
+          <button id="clear-btn" class="clear-btn" title="Clear" style="display:none;">x</button>
         </div>
         <button id="lookup-btn" class="lookup-icon-btn" title="Search Wallet">
           <span class="btn-text" style="display:flex;">
@@ -77,7 +73,6 @@
       <div id="watchlist" class="recent-searches" style="display:none; margin-top: 8px;"></div>
     </section>
 
-    <!-- Market Data Section (Global) -->
     <section class="market-section" id="global-market-section">
       <div class="market-header">
         <h2 class="nft-title">MARKET OVERVIEW</h2>
@@ -88,10 +83,7 @@
       </div>
     </section>
 
-    <!-- Dashboard (hidden until lookup) -->
     <main id="dashboard" class="dashboard" style="display:none;">
-
-      <!-- Wallet Address Display -->
       <div class="wallet-address-bar">
         <span class="wallet-label">Wallet</span>
         <code id="wallet-display" class="wallet-addr"></code>
@@ -104,7 +96,8 @@
           <span class="sync-label" id="sync-status">Sync Off</span>
         </div>
 
-        <div class="watchlist-container" id="watchlist-container" data-tooltip="Click the ⭐ to save to your Watchlist.">
+        <div class="watchlist-container" id="watchlist-container"
+          data-tooltip="Click the star to save to your Watchlist.">
           <button id="star-btn" class="copy-btn star-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="star-icon" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -126,7 +119,6 @@
         </div>
       </div>
 
-      <!-- Balance Cards -->
       <section class="balance-cards">
         <div class="balance-card gmon-card">
           <div class="card-header">
@@ -143,9 +135,9 @@
                   mask="url(#gmon-hole)" />
               </svg>
             </div>
-            <span class="card-label">gMON Balance</span>
+            <span class="card-label">Wallet gMON</span>
           </div>
-          <div id="gmon-balance" class="card-value skeleton-text">—</div>
+          <div id="gmon-balance" class="card-value skeleton-text">--</div>
           <div id="gmon-usd" class="card-sub"></div>
         </div>
 
@@ -160,20 +152,31 @@
             </div>
             <span class="card-label">MON Balance</span>
           </div>
-          <div id="mon-balance" class="card-value skeleton-text">—</div>
+          <div id="mon-balance" class="card-value skeleton-text">--</div>
           <div id="mon-usd" class="card-sub"></div>
         </div>
 
         <div class="balance-card nft-count-card">
           <div class="card-header">
-            <span class="card-label">TOTAL NFTs</span>
+            <span class="card-label">Total NFTs</span>
           </div>
-          <div id="total-nfts" class="card-value skeleton-text">—</div>
+          <div id="total-nfts" class="card-value skeleton-text">--</div>
           <div class="card-sub">Scale + Roarrr</div>
         </div>
       </section>
 
-      <!-- Scale NFTs -->
+      <section class="nft-section">
+        <div class="nft-section-header">
+          <h2 class="nft-title">PROTOCOL POSITIONS</h2>
+          <span id="protocol-count" class="nft-count-badge">0</span>
+        </div>
+        <p id="protocol-warning" class="protocol-warning" style="display:none;"></p>
+        <div id="protocol-list" class="protocol-list"></div>
+        <div class="nft-empty" id="protocol-empty" style="display:none;">
+          <p>No redeem or lending positions found for this wallet</p>
+        </div>
+      </section>
+
       <section class="nft-section">
         <div class="nft-section-header">
           <h2 class="nft-title">SCALE</h2>
@@ -186,7 +189,6 @@
         </div>
       </section>
 
-      <!-- Roarrr NFTs -->
       <section class="nft-section">
         <div class="nft-section-header">
           <h2 class="nft-title">ROARRR</h2>
@@ -198,10 +200,8 @@
           </div>
         </div>
       </section>
-
     </main>
 
-    <!-- Global Activity Feed (Moved to bottom) -->
     <section id="global-activity" class="global-activity-section">
       <div class="global-activity-header">
         <h2 class="nft-title" style="font-size: 1rem; color: var(--magma-orange-light); margin: 0;">LIVE ECOSYSTEM
@@ -213,7 +213,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
       <button id="export-btn" class="export-footer-btn" style="display:none;" title="Export data to CSV">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="export-icon" stroke="currentColor"
@@ -222,14 +221,14 @@
           <polyline points="7 10 12 15 17 10"></polyline>
           <line x1="12" y1="15" x2="12" y2="3"></line>
         </svg>
-        Export Dashboard data to CSV
+        Export dashboard data to CSV
       </button>
-      <p>Built for the Magma Community 🔥 Powered by <a href="https://monad.xyz" target="_blank"
+      <p>Built for the Magma Community. Powered by <a href="https://monad.xyz" target="_blank"
           rel="noopener">Monad</a></p>
     </footer>
   </div>
 
-  <script type="module" src="/main.js"></script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
